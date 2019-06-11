@@ -1,5 +1,48 @@
 package mt19937
 
+
+//---------------------------------Public------------------------------------------
+
+type MT19937 struct{
+	state []uint64
+	index int
+}
+
+func New() *MT19937{
+	mt := &MT19937{
+		state: make([]uint64, n),
+		index: n,
+	}
+	mt.Seed(5489)
+	return mt
+}
+
+func (mt *MT19937) Seed(seed uint64){
+	x := mt.state
+	x[0] = seed
+	for i := 1; i < n; i++{
+		x[i] = f * (x[i-1] ^ (x[i-1] >> (w-2))) + uint64(i)
+	}
+}
+
+func (mt *MT19937)  Random() uint64 {
+	x:=mt.state
+	if (mt.index == n){
+		mt.twist()
+	}
+	var z uint64 = x[mt.index]
+
+	mt.index++
+
+ 	z ^= ((z >> u) & d)
+ 	z ^= ((z << s) & b)
+ 	z ^= ((z << t) & c)
+    z ^= (z >> l)
+    return z
+}
+
+//---------------------------------Private------------------------------------------
+
 const(
 	//算法中用到的变量如下所示：
     //w：长度（以bit为单位）
@@ -11,7 +54,7 @@ const(
     //s,t：TGFSR的位移量
     //u,d,l：额外梅森旋转所需的掩码和位移量
     //f：初始化梅森旋转链所需参数
-	
+    
 	w = 64
 	n = 312
 	m = 156
@@ -33,28 +76,6 @@ const(
 	f = 6364136223846793005
 )
 
-type MT19937 struct{
-	state []uint64
-	index int
-}
-
-func NewMT19937() *MT19937{
-	mt := &MT19937{
-		state: make([]uint64, n),
-		index: n,
-	}
-	mt.Seed(5489)
-	return mt
-}
-
-func (mt *MT19937) Seed(seed uint64){
-	x := mt.state
-	x[0] = seed
-	for i := 1; i < n; i++{
-		x[i] = f * (x[i-1] ^ (x[i-1] >> (w-2))) + uint64(i)
-	}
-}
-
 func (mt *MT19937) twist(){
 	x := mt.state
 	const lower_mask uint64 = 1 << r -1
@@ -74,22 +95,4 @@ func (mt *MT19937) twist(){
 	var y uint64 = (x[n-1] & upper_mask) | (x[0] & lower_mask)
 	x[n - 1] = x[m - 1] ^ (y >> 1) ^ ((x[0] & 1) * a)
 	mt.index = 0
- }
-
- func (mt *MT19937)  Random() uint64 {
- 	x:=mt.state
- 	if (mt.index == n){
- 		mt.twist()
- 	}
-
- 	var z uint64 = x[mt.index]
-
- 	mt.index++
-
- 	z ^= ((z >> u) & d)
-    z ^= ((z << s) & b)
-    z ^= ((z << t) & c)
-    z ^= (z >> l)
-    return z
-
- }
+}
