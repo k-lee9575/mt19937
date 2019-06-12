@@ -20,5 +20,10 @@ func main(){
     for i:=0; i< 10; i ++{
         fmt.Println(distInt64.Int64())
     }
+    
+    distBernolli := mt19937.DistBernolli(mt, 0.25)
+    for i := 0; i < 1000; i++{
+        fmt.Println(distBernolli.Bool())
+    }
 }
 ```
