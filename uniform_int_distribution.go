@@ -12,7 +12,7 @@ type uniform_int_distribution struct{
 
 func DistInt64(eng *MT19937, begin int64, end int64) *uniform_int_distribution{
 	if (begin > end){
-		log.Println("begin is not allowed to be greater than end!")
+		log.Println("ERROR! begin is not allowed to be greater than end!")
 		return nil
 	}
 

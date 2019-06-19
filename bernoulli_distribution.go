@@ -11,7 +11,7 @@ type bernoulli_distribution struct{
 
 func DistBernolli(eng *MT19937, prob float64) *bernoulli_distribution{
 	if(prob < 0 || prob > 1){
-		log.Println("prob must be between 0 and 1")
+		log.Println("ERROR! prob must be between 0 and 1")
 		return nil
 	}
 	dist := &bernoulli_distribution{
